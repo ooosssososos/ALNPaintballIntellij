@@ -1,0 +1,10 @@
+ name: ALNCounterCraft
+ version: 0.0.1
+ main: com.hotmail.ooosssososos.CounterCraft
+ description:
+ author: ooosssososos AKA Mr_Creepersss
+ commands:
+    cc:
+      description: admins only
+      aliases: [countercraft]
+      usage: Syntax error! try /cc help

@@ -1,11 +1,10 @@
 package com.hotmail.ooosssososos;
 
-import org.bukkit.Bukkit;
+import com.hotmail.ooosssososos.GameType.Game;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -34,6 +33,7 @@ public class ALNPlayer implements Comparable{
     }
     public void reset(){
         Money = 1000;
+        Despawn();
         TimeAlive  = 0;
     }
 
@@ -92,6 +92,7 @@ public class ALNPlayer implements Comparable{
     }
 
     public void Despawn(){
+        p.sendMessage("despawned`   ");
         p.getInventory().clear();
         p.updateInventory();
         p.teleport(GameManager.getGame(p).lobby);

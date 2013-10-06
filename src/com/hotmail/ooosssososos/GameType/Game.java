@@ -1,9 +1,13 @@
-package com.hotmail.ooosssososos;
+package com.hotmail.ooosssososos.GameType;
 
+import com.hotmail.ooosssososos.ALNPlayer;
+import com.hotmail.ooosssososos.ALNPlayerManager;
+import com.hotmail.ooosssososos.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +29,7 @@ public class Game {
     public static final int IN_PROGRESS = 1;
     public static final int RESTARTING = 2;
     public static final int UNINITIALIZED = 3;
+    public String GameType;
     public int min_Player;
     public int max_Player;
     public static final int TEAM_RED = 1;
@@ -41,7 +46,9 @@ public class Game {
     public int RScore = 0;
     public int BScore = 0;
     public int winCondition;
+    public HashMap<String, String> CustomData = new HashMap<String, String>();
     public Game(){
+        GameType = "Normal";
         players = new HashMap<ALNPlayer, Integer>();
         status = 3;
     }
@@ -54,26 +61,40 @@ public class Game {
             restart();
         }
     }
-    public void killConfirmed(int team){
+    public void point(int team){
         switch(team){
             case Game.TEAM_BLUE:
                 Bukkit.getServer().broadcastMessage(ChatColor.BLUE + "BlueTeam Point");
                 BScore++;
                 break;
             case Game.TEAM_RED:
-                Bukkit.getServer().broadcastMessage(ChatColor.BLUE + "RedTeam Point");
+                Bukkit.getServer().broadcastMessage(ChatColor.RED + "RedTeam Point");
                 RScore++;
                 break;
         }
 
         checkWin();
     }
+    public void PlayerDeath(PlayerDeathEvent event){
+        ALNPlayerManager.getALNPlayer(event.getEntity()).Money += 200;
+        ALNPlayerManager.getALNPlayer(event.getEntity().getKiller()).Money += 400;
+
+        ALNPlayerManager.getALNPlayer(event.getEntity()).updateMoney();
+        ALNPlayerManager.getALNPlayer(event.getEntity().getKiller()).updateMoney();
+        point(players.get(ALNPlayerManager.getALNPlayer(event.getEntity())));
+    }
+    public void PlayerMove(PlayerMoveEvent event){
+
+    }
+
     public Game(String nam){
         players = new HashMap<ALNPlayer, Integer>();
         status = 3;
         Name = nam;
     }
     public void restart(){
+
+        status = 2;
         RScore = 0;
         BScore = 0;
         for(Map.Entry<ALNPlayer,Integer> pair : players.entrySet()){
@@ -81,7 +102,7 @@ public class Game {
         }
         players = new HashMap<ALNPlayer, Integer>();
         updateTeams();
-        status = 2;
+        status = Game.WAITING;
     }
     public int getTeam(ALNPlayer p){
         return players.get(p);

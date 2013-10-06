@@ -1,5 +1,6 @@
 package com.hotmail.ooosssososos;
 
+import com.hotmail.ooosssososos.GameType.Game;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

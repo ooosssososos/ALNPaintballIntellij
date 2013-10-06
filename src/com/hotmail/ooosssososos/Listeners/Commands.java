@@ -1,7 +1,8 @@
 package com.hotmail.ooosssososos.Listeners;
 
 import com.hotmail.ooosssososos.CounterCraft;
-import com.hotmail.ooosssososos.Game;
+import com.hotmail.ooosssososos.GameType.CTFGame;
+import com.hotmail.ooosssososos.GameType.Game;
 import com.hotmail.ooosssososos.GameManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -54,11 +55,21 @@ public class Commands implements CommandExecutor {
             }
 
             else if(args[1].equalsIgnoreCase("new")){
+                if(args[3].equalsIgnoreCase("CTF")){
+
+                    plugin.gm.games.put(args[2], new CTFGame(args[2]));
+                }else{
+
                 plugin.gm.games.put(args[2], new Game(args[2]));
+                }
                 p.sendMessage(ChatColor.DARK_GREEN + "Success");
                 return true;
             }
-
+            else if(args[1].equalsIgnoreCase("remove")){
+                GameManager.games.remove(args[2]);
+                p.sendMessage(ChatColor.DARK_GREEN + "Success");
+                return true;
+            }
             else if(args[1].equalsIgnoreCase("start")){
                 plugin.gm.games.get(args[2]).status = Game.IN_PROGRESS;
                 p.sendMessage(ChatColor.DARK_GREEN + "Success");
@@ -67,6 +78,16 @@ public class Commands implements CommandExecutor {
 
             else if(args[1].equalsIgnoreCase("setBSpawn")){
                 plugin.gm.games.get(args[2]).spawn_B = p.getLocation();
+                p.sendMessage(ChatColor.DARK_GREEN + "Success");
+                return true;
+            }
+            else if(args[1].equalsIgnoreCase("setBFlag")){
+                ((CTFGame)plugin.gm.games.get(args[2])).B_Flag = p.getLocation();
+                p.sendMessage(ChatColor.DARK_GREEN + "Success");
+                return true;
+            }
+            else if(args[1].equalsIgnoreCase("setRFlag")){
+                ((CTFGame)plugin.gm.games.get(args[2])).R_Flag = p.getLocation();
                 p.sendMessage(ChatColor.DARK_GREEN + "Success");
                 return true;
             }
@@ -91,6 +112,12 @@ public class Commands implements CommandExecutor {
                 return true;
             }
 
+            else if(args[1].equalsIgnoreCase("set")){
+                plugin.gm.games.get(args[2]).CustomData.put(args[3],args[4]);
+                p.sendMessage(ChatColor.DARK_GREEN + "Success");
+                return true;
+            }
+
             else if(args[1].equalsIgnoreCase("max_Player")){
                 plugin.gm.games.get(args[2]).max_Player = Integer.parseInt(args[3]);
                 p.sendMessage(ChatColor.DARK_GREEN + "Success");
@@ -102,6 +129,7 @@ public class Commands implements CommandExecutor {
                 p.sendMessage(ChatColor.DARK_GREEN + "Success");
                 return true;
             }
+
 
             }
 

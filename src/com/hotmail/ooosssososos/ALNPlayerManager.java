@@ -20,12 +20,12 @@ TASK: ALNPlayerManager
  */
 public class ALNPlayerManager {
 
-    private HashMap<Player, ALNPlayer> data;
+    private static HashMap<Player, ALNPlayer> data;
 
     public ALNPlayerManager(){
         data = new HashMap<Player, ALNPlayer>();
     }
-    public Player getPlayer(ALNPlayer ap){
+    public static Player getPlayer(ALNPlayer ap){
         for(Map.Entry<Player, ALNPlayer> pair : data.entrySet()){
             if(pair.getValue().equals(pair.getValue())){
                 return pair.getKey();
@@ -33,14 +33,14 @@ public class ALNPlayerManager {
         }
         return null;
     }
-    public ALNPlayer getALNPlayer(Player p){
+    public static ALNPlayer getALNPlayer(Player p){
         return data.get(p);
     }
-    public void add(Player p){
+    public static void add(Player p){
         data.put(p, new ALNPlayer(p));
     }
 
-    public void rem(Player p){
+    public static void rem(Player p){
         data.remove(p);
     }
 

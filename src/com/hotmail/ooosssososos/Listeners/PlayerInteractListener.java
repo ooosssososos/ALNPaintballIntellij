@@ -1,13 +1,10 @@
 package com.hotmail.ooosssososos.Listeners;
 
 import com.hotmail.ooosssososos.CounterCraft;
-import com.hotmail.ooosssososos.Game;
+import com.hotmail.ooosssososos.GameType.Game;
 import com.hotmail.ooosssososos.GameManager;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,9 +14,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.Map;
 
@@ -72,23 +66,23 @@ public class PlayerInteractListener implements Listener{
     }
     @EventHandler
     public void Drop(PlayerDropItemEvent event){
+        if(GameManager.getGame(event.getPlayer()) == null)return;
         event.setCancelled(true);
         event.getPlayer().sendMessage("No Dropping Items!");
     }
     @EventHandler
     public void onDeath(PlayerDeathEvent event){
         if(GameManager.getGame(event.getEntity()) != null){
+            GameManager.getGame(event.getEntity()).PlayerDeath(event);
             event.getDrops().clear();
-
-            plugin.pm.getALNPlayer(event.getEntity()).Money += 200;
-            plugin.pm.getALNPlayer(event.getEntity().getKiller()).Money += 400;
-
-            plugin.pm.getALNPlayer(event.getEntity()).updateMoney();
-            plugin.pm.getALNPlayer(event.getEntity().getKiller()).updateMoney();
-            GameManager.getGame(event.getEntity().getKiller()).killConfirmed(GameManager.getGame(event.getEntity().getKiller()).getTeam(plugin.pm.getALNPlayer(event.getEntity().getKiller())));
         }
     }
-
+    @EventHandler
+    public void onMove(PlayerMoveEvent event){
+        if(GameManager.getGame(event.getPlayer()) != null){
+            GameManager.getGame(event.getPlayer()).PlayerMove(event);
+        }
+    }
 
 
     @EventHandler(priority =  EventPriority.NORMAL)

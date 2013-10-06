@@ -1,5 +1,7 @@
 package com.hotmail.ooosssososos;
 
+import com.hotmail.ooosssososos.GameType.CTFGame;
+import com.hotmail.ooosssososos.GameType.Game;
 import com.hotmail.ooosssososos.Listeners.Commands;
 import com.hotmail.ooosssososos.Listeners.IconMenu;
 import com.hotmail.ooosssososos.Listeners.PlayerInteractListener;
@@ -9,7 +11,6 @@ import com.hotmail.ooosssososos.Thread.SignUpdateThread;
 import com.hotmail.ooosssososos.util.SerializableLocation;
 import com.shampaggon.crackshot.CSDirector;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -83,15 +84,16 @@ public class CounterCraft extends JavaPlugin{
               .setOption(10, new ItemStack(Material.ARROW, 1), "PUTTY", "REMOTE EXPLOSIVE")
               .setOption(11, new ItemStack(Material.ARROW, 1), "TYPE95", "A RIFLE I THINK")
               .setOption(12, new ItemStack(Material.ARROW, 1), "TOASTER", "a toaster that explodes when punched")
-              .setOption(13, new ItemStack(Material.ARROW, 1), "COCOPOPS", "clusterbomb")
-              .setOption(14, new ItemStack(Material.ARROW, 1), "AIRSTRIKE", "airstrike nuff said.")
+              .setOption(13, new ItemStack(Material.ARROW, 1), "BARRETT_M86", "High Power Long range Sniper")
+              .setOption(14, new ItemStack(Material.ARROW, 1), "M134D", "Rain Bullets upon your enemies.")
               .setOption(15, new ItemStack(Material.ARROW, 1), "GAUSS", "GAUSS shotgun penetrates walls 40 block range")
               .setOption(16, new ItemStack(Material.ARROW, 1), "CARBINE", "Rifle with grenade launcher underbarrel")
               .setOption(17, new ItemStack(Material.ARROW, 1), "OLYMPIA", "Dragonsbreath shotgun")
               .setOption(18, new ItemStack(Material.ARROW, 1), "FLASHBANG", "BOOM aaaaand your blind")
               .setOption(19, new ItemStack(Material.ARROW, 1), "C4", "Remote detonated explosive")
               .setOption(20, new ItemStack(Material.ARROW, 1), "AK-47", "Standard issue assault rifle")
-              .setOption(21, new ItemStack(Material.ARROW, 1), "HUNTING", "Scoped High power hunting rifle");
+              .setOption(21, new ItemStack(Material.ARROW, 1), "GLOCK_17", "Standard issue assault rifle")
+              .setOption(22, new ItemStack(Material.ARROW, 1), "HUNTING", "Scoped High power hunting rifle");
 
 
 
@@ -103,7 +105,14 @@ public class CounterCraft extends JavaPlugin{
         conf.addDefault("games",null);
         for(String rpath : conf.getConfigurationSection("games").getKeys(false)){
             ConfigurationSection sec = conf.getConfigurationSection("games." + rpath);
-            Game g = new Game();
+            Game g;
+            if(sec.get("GameType").equals("Normal")){
+                g = new Game();
+            }else if(sec.get("GameType").equals("CTF")){
+                g = new CTFGame();
+            }else{
+                g = new Game();
+            }
             g.Name = rpath;
             g.max_Player = sec.getInt("max_Player");
             g.min_Player = sec.getInt("min_Player");
@@ -113,19 +122,22 @@ public class CounterCraft extends JavaPlugin{
             g.lobby =  SerializableLocation.fromString(sec.getString("lobby")).toLocation();
             g.status = Game.WAITING;
             g.winCondition = sec.getInt("winCondition");
+            if(sec.isConfigurationSection("CustomData")){
+            g.CustomData = (HashMap)sec.getConfigurationSection("CustomData").getValues(false);
+            }
             gm.games.put(g.Name, g);
+
         }
         GunPrices = (HashMap)conf.getConfigurationSection("gunPrices").getValues(false);
     }
     public void saveConf(){
-        GunPrices.put("Test", 3);
 
         for(Map.Entry<String, Game> pair : gm.games.entrySet()){
             if(!conf.isConfigurationSection("games." + pair.getKey())){
                 conf.createSection("games." + pair.getKey());
             }
             ConfigurationSection sec = conf.getConfigurationSection("games." + pair.getKey());
-
+            sec.createSection("CustomData", pair.getValue().CustomData);
             System.out.println(pair.getValue().max_Player);
             sec.set("max_Player", pair.getValue().max_Player);
             sec.set("min_Player", pair.getValue().min_Player);
@@ -134,6 +146,7 @@ public class CounterCraft extends JavaPlugin{
             sec.set("lobby", (new SerializableLocation(pair.getValue().lobby)).toString());
             sec.set("statusSign", (new SerializableLocation(pair.getValue().statusSign)).toString());
             sec.set("winCondition", pair.getValue().winCondition);
+            sec.set("GameType", pair.getValue().GameType);
         }
         conf.createSection("gunPrices", GunPrices);
         this.saveConfig();

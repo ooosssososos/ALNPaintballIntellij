@@ -2,7 +2,7 @@ package com.hotmail.ooosssososos.Thread;
 
 import com.hotmail.ooosssososos.ALNPlayer;
 import com.hotmail.ooosssososos.CounterCraft;
-import com.hotmail.ooosssososos.Game;
+import com.hotmail.ooosssososos.GameType.Game;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;

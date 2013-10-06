@@ -1,15 +1,11 @@
 package com.hotmail.ooosssososos.Thread;
 
 import com.hotmail.ooosssososos.CounterCraft;
-import com.hotmail.ooosssososos.Game;
-import org.bukkit.Bukkit;
+import com.hotmail.ooosssososos.GameType.Game;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Iterator;
 import java.util.Map;
 
 /**

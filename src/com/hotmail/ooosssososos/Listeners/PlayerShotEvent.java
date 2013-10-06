@@ -1,16 +1,11 @@
 package com.hotmail.ooosssososos.Listeners;
 
 import com.hotmail.ooosssososos.CounterCraft;
-import com.hotmail.ooosssososos.Game;
+import com.hotmail.ooosssososos.GameType.Game;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
-
-import java.util.EventListener;
 
 /**
  * Created with IntelliJ IDEA.

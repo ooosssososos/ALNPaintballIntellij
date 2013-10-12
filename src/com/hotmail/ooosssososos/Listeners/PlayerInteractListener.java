@@ -44,12 +44,18 @@ public class PlayerInteractListener implements Listener{
 
             for(Map.Entry<String, Game> pair : plugin.gm.games.entrySet()){
                 if(pair.getValue().statusSign.getBlock().equals(b)){
-                    System.out.println(pair.getValue().players.size());
+                    if(pair.getValue().status == Game.WAITING){
+                        if(pair.getValue().players.size() <= pair.getValue().max_Player){
+                            pair.getValue().addPlayer(plugin.pm.getALNPlayer(event.getPlayer()));
+                            event.getPlayer().teleport(pair.getValue().lobby);
+                        }
+                    }else{
                     if(pair.getValue().players.size() <= pair.getValue().max_Player){
                         pair.getValue().addPlayer(plugin.pm.getALNPlayer(event.getPlayer()));
                         pair.getValue().spawn(plugin.pm.getALNPlayer(event.getPlayer()));
                     }else{
                         event.getPlayer().sendMessage("that game is full try another one");
+                    }
                     }
                 }
             }

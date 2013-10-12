@@ -45,7 +45,7 @@ public class CounterCraft extends JavaPlugin{
         csapi = (CSDirector) Bukkit.getServer().getPluginManager().getPlugin("CrackShot");
         gm = new GameManager(this);
         conf = this.getConfig();
-        pm = new ALNPlayerManager();
+        pm = new ALNPlayerManager(this);
         initialize();
         loadConfig();
     }
@@ -110,6 +110,10 @@ public class CounterCraft extends JavaPlugin{
                 g = new Game();
             }else if(sec.get("GameType").equals("CTF")){
                 g = new CTFGame();
+                ((CTFGame)g).B_Flag_Def =  SerializableLocation.fromString(sec.getString("B_Flag")).toLocation();
+                ((CTFGame)g).R_Flag_Def =  SerializableLocation.fromString(sec.getString("R_Flag")).toLocation();
+                ((CTFGame)g).B_Flag = ((CTFGame)g).B_Flag_Def;
+                ((CTFGame)g).R_Flag = ((CTFGame)g).R_Flag_Def;
             }else{
                 g = new Game();
             }
@@ -139,6 +143,10 @@ public class CounterCraft extends JavaPlugin{
             ConfigurationSection sec = conf.getConfigurationSection("games." + pair.getKey());
             sec.createSection("CustomData", pair.getValue().CustomData);
             System.out.println(pair.getValue().max_Player);
+            if(pair.getValue().GameType.equalsIgnoreCase("CTF")){
+                sec.set("B_Flag", (new SerializableLocation(((CTFGame)(pair.getValue())).B_Flag_Def).toString()));
+                sec.set("R_Flag", (new SerializableLocation(((CTFGame)(pair.getValue())).R_Flag_Def).toString()));
+            }
             sec.set("max_Player", pair.getValue().max_Player);
             sec.set("min_Player", pair.getValue().min_Player);
             sec.set("spawn_B", (new SerializableLocation(pair.getValue().spawn_B)).toString());
@@ -148,8 +156,32 @@ public class CounterCraft extends JavaPlugin{
             sec.set("winCondition", pair.getValue().winCondition);
             sec.set("GameType", pair.getValue().GameType);
         }
+        for(Player p : this.getServer().getOnlinePlayers()){
+            ALNPlayerManager.rem(p);
+        }
         conf.createSection("gunPrices", GunPrices);
         this.saveConfig();
+    }
+    public void savePlayer(ALNPlayer p){
+        if(!conf.isConfigurationSection("players"))
+        {
+            conf.createSection("players");
+        }
+        ConfigurationSection sec = conf.getConfigurationSection("players");
+        try{
+
+            sec.set(p.p.getName(), p.exp);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public ALNPlayer loadPlayer(Player p){
+        ConfigurationSection sec = conf.getConfigurationSection("players");
+        try{
+        return new ALNPlayer(p,sec.getInt(p.getName()));
+        }catch (Exception e){
+            return null;
+        }
     }
     public void onDisable(){
         saveConf();

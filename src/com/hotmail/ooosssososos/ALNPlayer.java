@@ -28,15 +28,21 @@ public class ALNPlayer implements Comparable{
     public Player p;
     public int Money = 1000;
     public int TimeAlive = 0;
+    public int exp = 0;
     public ALNPlayer(Player d){
         p = d;
     }
+    public ALNPlayer(Player d, int e){
+        p = d;
+        exp = e;
+    }
     public void reset(){
         Money = 1000;
-        Despawn();
+        p.getInventory().clear();
+        p.getInventory().setArmorContents(new ItemStack[4]);
+        p.teleport(p.getWorld().getSpawnLocation());
         TimeAlive  = 0;
     }
-
     @Override
     public int compareTo(Object o) {
         if(((ALNPlayer)o).p.equals(this.p)){
@@ -92,7 +98,7 @@ public class ALNPlayer implements Comparable{
     }
 
     public void Despawn(){
-        p.sendMessage("despawned`   ");
+        p.sendMessage("despawned");
         p.getInventory().clear();
         p.updateInventory();
         p.teleport(GameManager.getGame(p).lobby);

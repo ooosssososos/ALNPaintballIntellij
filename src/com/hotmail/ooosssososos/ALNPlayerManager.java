@@ -20,9 +20,10 @@ TASK: ALNPlayerManager
  */
 public class ALNPlayerManager {
 
-    private static HashMap<Player, ALNPlayer> data;
-
-    public ALNPlayerManager(){
+    public static HashMap<Player, ALNPlayer> data;
+    public static CounterCraft plugin;
+    public ALNPlayerManager(CounterCraft plu){
+        plugin = plu;
         data = new HashMap<Player, ALNPlayer>();
     }
     public static Player getPlayer(ALNPlayer ap){
@@ -37,10 +38,12 @@ public class ALNPlayerManager {
         return data.get(p);
     }
     public static void add(Player p){
-        data.put(p, new ALNPlayer(p));
+
+        data.put(p, plugin.loadPlayer(p));
     }
 
     public static void rem(Player p){
+        plugin.savePlayer(ALNPlayerManager.getALNPlayer(p));
         data.remove(p);
     }
 

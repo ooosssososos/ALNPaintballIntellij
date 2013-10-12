@@ -1,5 +1,6 @@
 package com.hotmail.ooosssososos.Listeners;
 
+import com.hotmail.ooosssososos.ALNPlayerManager;
 import com.hotmail.ooosssososos.CounterCraft;
 import com.hotmail.ooosssososos.GameType.CTFGame;
 import com.hotmail.ooosssososos.GameType.Game;
@@ -82,11 +83,13 @@ public class Commands implements CommandExecutor {
                 return true;
             }
             else if(args[1].equalsIgnoreCase("setBFlag")){
+                ((CTFGame)plugin.gm.games.get(args[2])).B_Flag_Def = p.getLocation();
                 ((CTFGame)plugin.gm.games.get(args[2])).B_Flag = p.getLocation();
                 p.sendMessage(ChatColor.DARK_GREEN + "Success");
                 return true;
             }
             else if(args[1].equalsIgnoreCase("setRFlag")){
+                ((CTFGame)plugin.gm.games.get(args[2])).R_Flag_Def = p.getLocation();
                 ((CTFGame)plugin.gm.games.get(args[2])).R_Flag = p.getLocation();
                 p.sendMessage(ChatColor.DARK_GREEN + "Success");
                 return true;
@@ -144,11 +147,16 @@ public class Commands implements CommandExecutor {
         else if(args[0].equalsIgnoreCase("clear")){
             GameManager.getGame(p).restart();
         }
+        else if(args[0].equalsIgnoreCase("stats")){
+            p.sendMessage("Your XP is" + ALNPlayerManager.getALNPlayer(p).exp);
+        }
         else if(args[0].equalsIgnoreCase("GunPrice")){
             if(args[1].equalsIgnoreCase( "set")){
             plugin.GunPrices.put(args[2], Integer.parseInt(args[3]));
+                return true;
             }else if(args[1].equalsIgnoreCase("remove")){
                 plugin.GunPrices.remove(args[2]);
+                return true;
             }
         }
 

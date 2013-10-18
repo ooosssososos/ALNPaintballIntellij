@@ -17,6 +17,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,12 +41,14 @@ public class CounterCraft extends JavaPlugin{
     public ALNPlayerManager pm;
     public IconMenu GShop;
     public HashMap<String, Integer> GunPrices;
+    public static ScoreboardManager scman;
     public void onEnable(){
         getCommand("cc").setExecutor(new Commands(this));
         csapi = (CSDirector) Bukkit.getServer().getPluginManager().getPlugin("CrackShot");
         gm = new GameManager(this);
         conf = this.getConfig();
         pm = new ALNPlayerManager(this);
+        scman = this.getServer().getScoreboardManager();
         initialize();
         loadConfig();
     }
@@ -142,7 +145,7 @@ public class CounterCraft extends JavaPlugin{
             }
             ConfigurationSection sec = conf.getConfigurationSection("games." + pair.getKey());
             sec.createSection("CustomData", pair.getValue().CustomData);
-            System.out.println(pair.getValue().max_Player);
+            System.out.println(pair.getValue());
             if(pair.getValue().GameType.equalsIgnoreCase("CTF")){
                 sec.set("B_Flag", (new SerializableLocation(((CTFGame)(pair.getValue())).B_Flag_Def).toString()));
                 sec.set("R_Flag", (new SerializableLocation(((CTFGame)(pair.getValue())).R_Flag_Def).toString()));

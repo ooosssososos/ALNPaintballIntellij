@@ -2,12 +2,15 @@ package com.hotmail.ooosssososos.GameType;
 
 import com.hotmail.ooosssososos.ALNPlayer;
 import com.hotmail.ooosssososos.ALNPlayerManager;
+import com.hotmail.ooosssososos.CounterCraft;
 import com.hotmail.ooosssososos.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +32,10 @@ public class Game {
     public static final int IN_PROGRESS = 1;
     public static final int RESTARTING = 2;
     public static final int UNINITIALIZED = 3;
-    public String GameType;
+    public String GameType = "Normal";
+    public Scoreboard board = CounterCraft.scman.getNewScoreboard();
+    public Team SC_R_TEAM = board.registerNewTeam("Red Team");
+    public Team SC_B_TEAM = board.registerNewTeam("Blue Team");
     public int min_Player;
     public int max_Player;
     public static final int TEAM_RED = 1;
@@ -136,10 +142,20 @@ public class Game {
         status = Game.IN_PROGRESS;
     }
     public void updateTeams(){
+        SC_B_TEAM.setPrefix("Blue ");
+
+        SC_R_TEAM.setPrefix("Red ");
+
         for(Map.Entry<ALNPlayer,Integer> pair : players.entrySet()){
             if(pair.getValue() == TEAM_BLUE){
+                if(!SC_B_TEAM.hasPlayer(pair.getKey().p)){
+                    SC_B_TEAM.addPlayer(pair.getKey().p);
+                }
                 blueMembers++;
             }   else{
+                if(!SC_R_TEAM.hasPlayer(pair.getKey().p)){
+                    SC_R_TEAM.addPlayer(pair.getKey().p);
+                }
                 redMembers++;
             }
         }
